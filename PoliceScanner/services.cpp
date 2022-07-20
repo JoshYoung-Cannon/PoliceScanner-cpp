@@ -7,11 +7,16 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "crimesdto.h"
+#include "jsonmapping.h"
+
+const QString policeAPIRoot = "https://data.police.uk/api/";
+const QString lastUpdateAPICall = "crime-last-updated";
+const QString crimeAtLocationAPICall = "crimes-street/all-crime?lat=%1&lng=%2&date=%3-%4";
 
 Services::Services(QObject *parent)
  : QObject(parent)
- , dateRequest("https://data.police.uk/api/crime-last-updated")
- , crimeRequest("https://data.police.uk/api/crimes-street/all-crime?lat=%1&lng=%2&date=%3-%4")
+ , dateRequest(policeAPIRoot + lastUpdateAPICall)
+ , crimeRequest(policeAPIRoot + crimeAtLocationAPICall)
  , m_netMgr(new QNetworkAccessManager(this))
  , m_currentRequest(CurrentRequest::NONE)
 {
@@ -86,21 +91,23 @@ void Services::processLatestUpdateResponse(QNetworkReply &reply)
 
 void Services::processCrimesListResponse(QNetworkReply &reply)
 {
+    jsonmapping *jsonReference = new jsonmapping();
+    std::map<jsonmapping::crimesJsonFieldsEnum, QString> crimesJsonField = jsonReference->getCrimesJsonFields();
     QJsonDocument doc(QJsonDocument::fromJson(reply.readAll()));
 
     CrimesDto crimeList;
     QJsonArray array = doc.array();
     foreach(const QJsonValue &v, array){
         QJsonObject o = v.toObject();
-        std::cout << o.value("category").toString().toStdString() << std::endl;
-        if (o.value("outcome_status").isNull())
+        std::cout << o.value(crimesJsonField[jsonmapping::crimesJsonFieldsEnum::CATEGORY]).toString().toStdString() << std::endl;
+        if (o.value(crimesJsonField[jsonmapping::crimesJsonFieldsEnum::OUTCOME_STATUS]).isNull())
         {
-            crimeList.addCrime(Crime(o.value("category").toString()));
+            crimeList.addCrime(Crime(o.value(crimesJsonField[jsonmapping::crimesJsonFieldsEnum::CATEGORY]).toString()));
         }
         else
         {
-            QJsonObject outcome = o.value("outcome_status").toObject();
-            crimeList.addCrime(Crime(o.value("category").toString(), outcome.value("category").toString()));
+            QJsonObject outcome = o.value(crimesJsonField[jsonmapping::crimesJsonFieldsEnum::OUTCOME_STATUS]).toObject();
+            crimeList.addCrime(Crime(o.value(crimesJsonField[jsonmapping::crimesJsonFieldsEnum::CATEGORY]).toString(), outcome.value(crimesJsonField[jsonmapping::crimesJsonFieldsEnum::CATEGORY]).toString()));
         }
 
     }

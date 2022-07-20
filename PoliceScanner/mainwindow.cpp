@@ -6,8 +6,11 @@
 
 #include <iostream>
 
-const QString nullOutcomeValueResponse = "- Outcome-null-value";
-const QString emptyMapResponse = "- Outcome-null-value";
+const QString nullOutcomeValueResponse = "Outcome-null-value";
+const QString emptyMapResponse = "No Crimes Were Recorded At This Location During This Time";
+const QString crimeCategoryResponseFormat = "%1: %2";
+const QString crimeOutcomeResponseFormat = "- %1";
+const QString mapItemResponseFormat = "%1";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -75,8 +78,8 @@ void MainWindow::onLatestUpdateAvaliable(DateDto date)
 
 void MainWindow::onCrimeListSummary(CrimesDto crimes)
 {
-    // TODO display result
     std::cout << "Display Result" << std::endl;
+    this->ui->outputTree->clear();
     QString outputText = emptyMapResponse;
     QString numberOfCrimes;
     if (crimes.m_crimesMap.empty())
@@ -90,24 +93,31 @@ void MainWindow::onCrimeListSummary(CrimesDto crimes)
         outputText = "";
         for (const auto& [category, specificCrimes] : crimes.m_crimesMap)
         {
+            QTreeWidgetItem *categoryItem = new QTreeWidgetItem();
+            categoryItem->setText(0, QString(crimeCategoryResponseFormat).arg(category).arg(specificCrimes.size()));
             std::cout << category.toStdString() << ": " << specificCrimes.size() << std::endl;
-            numberOfCrimes = QString("%1").arg(specificCrimes.size());
-            outputText = outputText + category + ": " + numberOfCrimes + "\n";
+            outputText = outputText + QString(crimeCategoryResponseFormat).arg(category).arg(specificCrimes.size()) + "\n";
             for (const auto& currentCrime : specificCrimes)
             {
+                QTreeWidgetItem *crimeItem = new QTreeWidgetItem();
                 if (currentCrime.m_outcome.isEmpty())
                 {
+                    crimeItem->setText(0, QString(crimeOutcomeResponseFormat).arg(nullOutcomeValueResponse));
                     std::cout << nullOutcomeValueResponse.toStdString() << std::endl;
-                    outputText = outputText + nullOutcomeValueResponse + "\n";
+                    outputText = outputText + QString(crimeOutcomeResponseFormat).arg(nullOutcomeValueResponse) + "\n";
                 }
                 else
                 {
+                    crimeItem->setText(0, QString(crimeOutcomeResponseFormat).arg(currentCrime.m_outcome));
                     std::cout << "- " << currentCrime.m_outcome.toStdString() << std::endl;
-                    outputText = outputText + "- " + currentCrime.m_outcome + "\n";
+                    outputText = outputText + QString(crimeOutcomeResponseFormat).arg(currentCrime.m_outcome) + "\n";
                 }
+                categoryItem->addChild(crimeItem);
             }
+            this->ui->outputTree->addTopLevelItem(categoryItem);
             outputText = outputText + "\n";
         }
         this->ui->outputText->setPlainText(outputText);
     }
+
 }

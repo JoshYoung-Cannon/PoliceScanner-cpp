@@ -8,6 +8,9 @@
 
 const QString nullOutcomeValueResponse = "- Outcome-null-value";
 const QString emptyMapResponse = "- Outcome-null-value";
+const QString crimeCategoryResponseFormat = "%s: %d\n";
+const QString crimeOutcomeResponseFormat = "- %s\n";
+const QString mapItemResponseFormat = "%s\n";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -91,19 +94,18 @@ void MainWindow::onCrimeListSummary(CrimesDto crimes)
         for (const auto& [category, specificCrimes] : crimes.m_crimesMap)
         {
             std::cout << category.toStdString() << ": " << specificCrimes.size() << std::endl;
-            numberOfCrimes = QString("%1").arg(specificCrimes.size());
-            outputText = outputText + category + ": " + numberOfCrimes + "\n";
+            outputText = outputText + QString(crimeCategoryResponseFormat).arg(category).arg(specificCrimes.size());
             for (const auto& currentCrime : specificCrimes)
             {
                 if (currentCrime.m_outcome.isEmpty())
                 {
                     std::cout << nullOutcomeValueResponse.toStdString() << std::endl;
-                    outputText = outputText + nullOutcomeValueResponse + "\n";
+                    outputText = outputText + QString(crimeOutcomeResponseFormat).arg(nullOutcomeValueResponse);
                 }
                 else
                 {
                     std::cout << "- " << currentCrime.m_outcome.toStdString() << std::endl;
-                    outputText = outputText + "- " + currentCrime.m_outcome + "\n";
+                    outputText = outputText + QString(crimeOutcomeResponseFormat).arg(currentCrime.m_outcome);
                 }
             }
             outputText = outputText + "\n";

@@ -17,6 +17,11 @@ public:
         OUTCOME_STATUS
     };
 
+    enum outcomeStatusJsonFieldsEnum
+    {
+        OUTCOME_STATUS_CATEGORY
+    };
+
     QString getCrimesJsonFields(const crimesJsonFieldsEnum& key) {return m_crimesJsonFields[key];};
 
 private:

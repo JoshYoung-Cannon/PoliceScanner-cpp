@@ -105,7 +105,7 @@ void Services::processCrimesListResponse(QNetworkReply &reply)
         else
         {
             QJsonObject outcome = o.value(m_jsonReference.getCrimesJsonFields(jsonmapping::crimesJsonFieldsEnum::OUTCOME_STATUS)).toObject();
-            crimeList.addCrime(Crime(o.value(m_jsonReference.getCrimesJsonFields(jsonmapping::crimesJsonFieldsEnum::CATEGORY)).toString(), outcome.value(m_jsonReference.getCrimesJsonFields(jsonmapping::crimesJsonFieldsEnum::OUTCOME_STATUS)).toString()));
+            crimeList.addCrime(Crime(o.value(m_jsonReference.getCrimesJsonFields(jsonmapping::crimesJsonFieldsEnum::CATEGORY)).toString(), outcome.value(m_jsonReference.getCrimesJsonFields(jsonmapping::crimesJsonFieldsEnum::CATEGORY)).toString()));
         }
 
     }

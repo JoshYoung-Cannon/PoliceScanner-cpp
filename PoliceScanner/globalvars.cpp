@@ -14,6 +14,7 @@ GlobalVars::GlobalVars()
     , maxLat(62)
     , minLng(-9)
     , maxLng(2)
+    , earliestMonthText("June")
 {
 
 }

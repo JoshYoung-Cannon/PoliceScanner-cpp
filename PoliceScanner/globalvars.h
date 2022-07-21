@@ -1,6 +1,8 @@
 #ifndef GLOBALVARS_H
 #define GLOBALVARS_H
 
+#include <QString>
+
 class GlobalVars
 {
 public:
@@ -18,6 +20,7 @@ public:
     double minLng;
     double maxLat;
     double maxLng;
+    QString earliestMonthText;
 };
 
 #endif // GLOBALVARS_H

@@ -21,6 +21,7 @@ public:
 
 private slots:
 
+    void on_guideButton_clicked();
     void on_searchButton_clicked();
     void on_inputYear_valueChanged(int year);
     void onLatestUpdateAvaliable(DateDto date);

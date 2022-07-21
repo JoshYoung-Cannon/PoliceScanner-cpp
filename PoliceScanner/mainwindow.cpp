@@ -11,6 +11,10 @@ const QString emptyMapResponse = "No Crimes Were Recorded At This Location Durin
 const QString crimeCategoryResponseFormat = "%1: %2";
 const QString crimeOutcomeResponseFormat = "- %1";
 const QString mapItemResponseFormat = "%1";
+const QString instructionText = "Please choose a \n"
+                                "Latitiude in the range: %1 to %2\n"
+                                "Longitude in the range: %3 to %4\n"
+                                "Year and Month in the range: %5-%6 to %7-%8";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +38,22 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_guideButton_clicked()
+{
+    std::cout << "GUIDE CLICKED" << std::endl;
+    QString instructions = QString(instructionText)
+            .arg(globalVars.minLat)
+            .arg(globalVars.maxLat)
+            .arg(globalVars.minLng)
+            .arg(globalVars.maxLng)
+            .arg(globalVars.earliestYear)
+            .arg(globalVars.earliestMonth)
+            .arg(globalVars.maxYear)
+            .arg(globalVars.maxMonth);
+    std::cout << instructions.toStdString() << std::endl;
+    ui->outputText->setText(instructions);
 }
 
 void MainWindow::on_searchButton_clicked()
@@ -85,7 +105,10 @@ void MainWindow::onCrimeListSummary(CrimesDto crimes)
     if (crimes.m_crimesMap.empty())
     {
         std::cout << emptyMapResponse.toStdString() << std::endl;
+        QTreeWidgetItem *emptyResponseItem = new QTreeWidgetItem();
+        emptyResponseItem->setText(0, emptyMapResponse);
         this->ui->outputText->setPlainText(outputText);
+        this->ui->outputTree->addTopLevelItem(emptyResponseItem);
         return;
     }
     else

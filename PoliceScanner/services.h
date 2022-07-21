@@ -1,11 +1,11 @@
 #ifndef SERVICES_H
 #define SERVICES_H
-
 #include <QObject>
 #include <QString>
 #include "datedto.h"
 #include <QNetworkAccessManager>
 #include "crimesdto.h"
+#include "jsonmapping.h"
 
 class Services : public QObject
 {
@@ -27,6 +27,7 @@ private:
     QString crimeRequest;
     QNetworkAccessManager *m_netMgr;
     CurrentRequest m_currentRequest;
+    jsonmapping m_jsonReference;
 
     void processLatestUpdateResponse(QNetworkReply &reply);
     void processCrimesListResponse(QNetworkReply &reply);

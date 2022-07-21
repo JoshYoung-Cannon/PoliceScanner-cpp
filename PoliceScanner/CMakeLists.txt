@@ -26,6 +26,8 @@ set(PROJECT_SOURCES
         crimesdto.h
         services.cpp
         services.h
+        jsonmapping.cpp
+        jsonmapping.h
         mainwindow.ui
 )
 

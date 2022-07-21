@@ -14,6 +14,10 @@ public:
     int endMonth;
     double initialLat;
     double initialLong;
+    double minLat;
+    double minLng;
+    double maxLat;
+    double maxLng;
 };
 
 #endif // GLOBALVARS_H

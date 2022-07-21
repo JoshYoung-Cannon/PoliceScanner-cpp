@@ -5,6 +5,7 @@
 #include "services.h"
 
 #include <iostream>
+#include <QMessageBox>
 
 const QString nullOutcomeValueResponse = "Outcome-null-value";
 const QString emptyMapResponse = "No Crimes Were Recorded At This Location During This Time";
@@ -53,7 +54,27 @@ void MainWindow::on_guideButton_clicked()
             .arg(globalVars.maxYear)
             .arg(globalVars.maxMonth);
     std::cout << instructions.toStdString() << std::endl;
-    ui->outputText->setText(instructions);
+    //ui->outputText->setText(instructions);
+
+    QMessageBox instructionBox;
+    instructionBox.setIcon(QMessageBox::Information);
+    instructionBox.setWindowTitle("Police Scanner Guide");
+    instructionBox.setText(instructions);
+    instructionBox.setInformativeText("Click Show Details for examples.");
+    instructionBox.setDetailedText(QString("The default values are: Latitude = %1, Longitude = %2, Year = %3, Month = %4\n"
+                                           "Searching with these values displays all the crimes and their outcomes within a mile of QMMS in %5-%6\n\n"
+                                           "Note that the data is usually updated at the end of the month, and includes crimes which were reported to the police in the preceding month.\n"
+                                           "For example, a crime which was reported during January will published on the last working day of February.\n"
+                                           "This means that you will typically only be able to report on crimes for a couple of months previous.")
+                                   .arg(globalVars.initialLat)
+                                   .arg(globalVars.initialLong)
+                                   .arg(globalVars.earliestYear)
+                                   .arg(globalVars.earliestMonth)
+                                   .arg(globalVars.earliestMonthText)
+                                   .arg(globalVars.earliestYear));
+    instructionBox.setStandardButtons(QMessageBox::Ok);
+    instructionBox.setDefaultButton(QMessageBox::Ok);
+    instructionBox.exec();
 }
 
 void MainWindow::on_searchButton_clicked()

@@ -10,6 +10,10 @@ GlobalVars::GlobalVars()
     , endMonth(12)
     , initialLat(51.22331)
     , initialLong(-2.69867)
-
+    , minLat(50)
+    , maxLat(62)
+    , minLng(-9)
+    , maxLng(2)
 {
+
 }
